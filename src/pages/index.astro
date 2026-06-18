@@ -6,12 +6,642 @@
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Mona Mayhem</title>
+		<title>Mona Mayhem - GitHub Contribution Battle Arena</title>
+		<style is:global>
+			:root {
+				color-scheme: dark;
+				--bg: #0a0a1a;
+				--panel: #131027;
+				--panel-border: rgba(95, 237, 131, 0.32);
+				--text: #e8f8ee;
+				--muted: #c5c8df;
+				--green: #5fed83;
+				--purple: #8a2be2;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				margin: 0;
+				font-family: 'Press Start 2P', cursive;
+				background:
+					radial-gradient(circle at 15% 20%, rgba(138, 43, 226, 0.3), transparent 35%),
+					radial-gradient(circle at 82% 78%, rgba(95, 237, 131, 0.25), transparent 36%),
+					var(--bg);
+				color: var(--text);
+				position: relative;
+				min-height: 100vh;
+			}
+
+			body::before,
+			body::after {
+				content: '';
+				position: fixed;
+				inset: 0;
+				pointer-events: none;
+				z-index: 0;
+			}
+
+			body::before {
+				background:
+					repeating-linear-gradient(
+						to bottom,
+						rgba(255, 255, 255, 0.06) 0,
+						rgba(255, 255, 255, 0.06) 1px,
+						transparent 2px,
+						transparent 4px
+					);
+				opacity: 0.16;
+				animation: scanlines 11s linear infinite;
+			}
+
+			body::after {
+				background: radial-gradient(circle at center, transparent 56%, rgba(0, 0, 0, 0.45) 100%);
+			}
+
+			.page {
+				max-width: 960px;
+				margin: 0 auto;
+				padding: 1.7rem;
+				display: grid;
+				gap: 1.15rem;
+				position: relative;
+				z-index: 1;
+			}
+
+			.header {
+				display: grid;
+				gap: 0.5rem;
+			}
+
+			.header h1 {
+				margin: 0;
+				font-size: clamp(1.35rem, 2.35vw, 2rem);
+				line-height: 1.3;
+				color: var(--green);
+				text-shadow:
+					0 0 6px rgba(95, 237, 131, 0.8),
+					0 0 16px rgba(95, 237, 131, 0.6),
+					0 0 28px rgba(138, 43, 226, 0.45);
+				animation: neon-pulse 2.7s ease-in-out infinite;
+			}
+
+			.header p {
+				margin: 0;
+				color: var(--muted);
+				font-size: 0.65rem;
+				letter-spacing: 0.06em;
+			}
+
+			.controls {
+				display: grid;
+				gap: 0.9rem;
+				padding: 1rem;
+				border: 1px solid var(--panel-border);
+				border-radius: 12px;
+				background: linear-gradient(145deg, rgba(19, 16, 39, 0.95), rgba(15, 12, 34, 0.92));
+				box-shadow:
+					0 0 0 1px rgba(138, 43, 226, 0.22) inset,
+					0 0 22px rgba(138, 43, 226, 0.18);
+			}
+
+			.player-inputs {
+				display: grid;
+				gap: 0.9rem;
+			}
+
+			.field {
+				display: grid;
+				gap: 0.35rem;
+			}
+
+			label {
+				font-weight: 600;
+				font-size: 0.56rem;
+				color: var(--muted);
+			}
+
+			input[type='text'] {
+				width: 100%;
+				padding: 0.7rem 0.75rem;
+				border: 1px solid rgba(95, 237, 131, 0.45);
+				border-radius: 8px;
+				background: rgba(10, 10, 26, 0.78);
+				color: var(--text);
+				font-family: 'Press Start 2P', cursive;
+				font-size: 0.58rem;
+				box-shadow: 0 0 0 1px rgba(95, 237, 131, 0.18) inset;
+				animation: float-in 0.75s ease both;
+			}
+
+			input[type='text']::placeholder {
+				color: rgba(197, 200, 223, 0.7);
+				font-size: 0.55rem;
+			}
+
+			input[type='text']:focus-visible,
+			button:focus-visible {
+				outline: 2px solid var(--green);
+				outline-offset: 2px;
+			}
+
+			button {
+				padding: 0.75rem 1rem;
+				border: 1px solid rgba(95, 237, 131, 0.55);
+				border-radius: 8px;
+				background: linear-gradient(90deg, rgba(95, 237, 131, 0.2), rgba(138, 43, 226, 0.3));
+				color: var(--text);
+				font-weight: 700;
+				font-family: 'Press Start 2P', cursive;
+				font-size: 0.58rem;
+				text-transform: uppercase;
+				cursor: pointer;
+				box-shadow:
+					0 0 0 1px rgba(138, 43, 226, 0.22) inset,
+					0 0 15px rgba(95, 237, 131, 0.25);
+				animation: float-in 0.85s ease both;
+			}
+
+			button:hover {
+				box-shadow:
+					0 0 0 1px rgba(95, 237, 131, 0.45) inset,
+					0 0 20px rgba(95, 237, 131, 0.45),
+					0 0 24px rgba(138, 43, 226, 0.3);
+			}
+
+			#battleButton.is-loading #battleButtonText {
+				animation: loading-shift 1.2s linear infinite;
+			}
+
+			button:disabled {
+				opacity: 0.85;
+				cursor: not-allowed;
+			}
+
+			.status {
+				min-height: 1.5rem;
+				font-size: 0.56rem;
+				line-height: 1.6;
+				color: var(--muted);
+			}
+
+			.sr-only {
+				position: absolute;
+				width: 1px;
+				height: 1px;
+				padding: 0;
+				margin: -1px;
+				overflow: hidden;
+				clip: rect(0, 0, 0, 0);
+				white-space: nowrap;
+				border: 0;
+			}
+
+			.status.error {
+				color: #ff9db5;
+				text-shadow: 0 0 8px rgba(255, 157, 181, 0.4);
+			}
+
+			.status.info {
+				color: var(--green);
+				text-shadow: 0 0 8px rgba(95, 237, 131, 0.4);
+			}
+
+			.results {
+				display: grid;
+				gap: 0.75rem;
+			}
+
+			.results.hidden {
+				display: none;
+			}
+
+			.results-grid {
+				display: grid;
+				gap: 0.75rem;
+			}
+
+			.winner-indicator {
+				margin: 0;
+				padding: 0.5rem 0.75rem;
+				border: 1px solid rgba(138, 43, 226, 0.55);
+				border-radius: 999px;
+				background: linear-gradient(90deg, rgba(95, 237, 131, 0.08), rgba(138, 43, 226, 0.18));
+				font-size: 0.56rem;
+				color: var(--muted);
+				justify-self: start;
+				box-shadow: 0 0 12px rgba(138, 43, 226, 0.25);
+			}
+
+			.winner-indicator.strong {
+				color: #9fe0b1;
+				border-color: #2f6b44;
+			}
+
+			.player-card {
+				position: relative;
+				overflow: hidden;
+				padding: 1rem;
+				border-radius: 12px;
+				border: 1px solid rgba(95, 237, 131, 0.3);
+				background: linear-gradient(180deg, rgba(20, 17, 40, 0.96), rgba(14, 12, 31, 0.92));
+				display: grid;
+				gap: 0.6rem;
+				box-shadow: 0 0 18px rgba(95, 237, 131, 0.14);
+			}
+
+			.player-card::before {
+				content: '';
+				position: absolute;
+				top: -130%;
+				left: -80%;
+				width: 52%;
+				height: 330%;
+				background: linear-gradient(
+					120deg,
+					transparent,
+					rgba(255, 255, 255, 0.08),
+					transparent
+				);
+				transform: rotate(18deg);
+				animation: card-shimmer 4.8s linear infinite;
+				pointer-events: none;
+			}
+
+			.player-card h2 {
+				margin: 0;
+				font-size: 0.72rem;
+				line-height: 1.4;
+				color: var(--green);
+				text-shadow: 0 0 8px rgba(95, 237, 131, 0.45);
+			}
+
+			.summary {
+				margin: 0;
+				font-size: 0.52rem;
+				line-height: 1.8;
+				color: var(--muted);
+			}
+
+			.graph {
+				display: grid;
+				grid-template-rows: repeat(7, 0.68rem);
+				grid-auto-flow: column;
+				grid-auto-columns: 0.68rem;
+				gap: 0.2rem;
+				overflow-x: auto;
+				padding-bottom: 0.2rem;
+			}
+
+			.square {
+				width: 0.68rem;
+				height: 0.68rem;
+				border-radius: 2px;
+				background: #1f2943;
+				transition: transform 0.15s ease, box-shadow 0.2s ease;
+			}
+
+			.square:hover {
+				transform: scale(1.35);
+				box-shadow:
+					0 0 8px rgba(95, 237, 131, 0.65),
+					0 0 12px rgba(138, 43, 226, 0.45);
+				z-index: 2;
+			}
+
+			.vs {
+				text-align: center;
+				font-size: 0.78rem;
+				color: transparent;
+				font-weight: 700;
+				background: linear-gradient(90deg, var(--green), var(--purple), var(--green));
+				background-size: 220% 220%;
+				-webkit-background-clip: text;
+				background-clip: text;
+				text-shadow: 0 0 12px rgba(138, 43, 226, 0.5);
+				animation: vs-gradient 2.2s linear infinite;
+			}
+
+			.winner-popup-backdrop {
+				position: fixed;
+				inset: 0;
+				display: grid;
+				place-items: center;
+				padding: 1rem;
+				background: rgba(6, 6, 20, 0.82);
+				backdrop-filter: blur(2px);
+				opacity: 0;
+				visibility: hidden;
+				pointer-events: none;
+				transition: opacity 0.2s ease;
+				z-index: 20;
+			}
+
+			.winner-popup-backdrop.is-open {
+				opacity: 1;
+				visibility: visible;
+				pointer-events: auto;
+			}
+
+			body.winner-popup-open {
+				overflow: hidden;
+			}
+
+			.winner-popup {
+				position: relative;
+				width: min(720px, 100%);
+				border-radius: 18px;
+				padding: 1.1rem;
+				border: 2px solid rgba(95, 237, 131, 0.52);
+				background: radial-gradient(circle at top, rgba(138, 43, 226, 0.25), rgba(10, 10, 26, 0.95) 52%);
+				box-shadow:
+					0 0 0 1px rgba(138, 43, 226, 0.3) inset,
+					0 0 40px rgba(95, 237, 131, 0.24),
+					0 0 56px rgba(138, 43, 226, 0.25);
+				transform: scale(0.93) translateY(8px);
+				opacity: 0;
+				transition: transform 0.24s ease, opacity 0.24s ease;
+				overflow: hidden;
+			}
+
+			.winner-popup-backdrop.is-open .winner-popup {
+				transform: scale(1) translateY(0);
+				opacity: 1;
+			}
+
+			.winner-popup-content {
+				position: relative;
+				z-index: 1;
+				display: grid;
+				gap: 0.75rem;
+				justify-items: center;
+				text-align: center;
+			}
+
+			.winner-popup-eyebrow {
+				margin: 0;
+				font-size: 0.5rem;
+				color: var(--muted);
+				letter-spacing: 0.08em;
+			}
+
+			.winner-popup-title {
+				margin: 0;
+				font-size: clamp(1rem, 3vw, 1.45rem);
+				line-height: 1.35;
+				color: var(--green);
+				text-shadow:
+					0 0 8px rgba(95, 237, 131, 0.85),
+					0 0 20px rgba(138, 43, 226, 0.6);
+			}
+
+			.winner-popup-subtitle {
+				margin: 0;
+				font-size: 0.5rem;
+				line-height: 1.8;
+				color: var(--muted);
+			}
+
+			.winner-popup-close {
+				font-size: 0.5rem;
+				padding-inline: 1.2rem;
+			}
+
+			.confetti-layer {
+				position: absolute;
+				inset: 0;
+				overflow: hidden;
+				pointer-events: none;
+			}
+
+			.confetti-piece {
+				position: absolute;
+				top: -16%;
+				left: 0;
+				width: 0.45rem;
+				height: 0.85rem;
+				border-radius: 2px;
+				opacity: 0.9;
+				background: var(--green);
+				animation: confetti-fall var(--fall-duration, 2.5s) linear var(--delay, 0s) forwards;
+				transform: translate3d(0, 0, 0) rotate(var(--start-rotate, 0deg));
+			}
+
+			.confetti-piece.round {
+				border-radius: 999px;
+				width: 0.38rem;
+				height: 0.38rem;
+			}
+
+			.player-inputs .field:nth-child(1) {
+				animation-delay: 0.08s;
+			}
+
+			.player-inputs .field:nth-child(2) {
+				animation-delay: 0.2s;
+			}
+
+			#battleButton {
+				animation-delay: 0.32s;
+			}
+
+			@keyframes scanlines {
+				from {
+					transform: translateY(0);
+				}
+				to {
+					transform: translateY(12px);
+				}
+			}
+
+			@keyframes neon-pulse {
+				0%,
+				100% {
+					opacity: 0.95;
+					text-shadow:
+						0 0 6px rgba(95, 237, 131, 0.8),
+						0 0 16px rgba(95, 237, 131, 0.6),
+						0 0 28px rgba(138, 43, 226, 0.45);
+				}
+				50% {
+					opacity: 1;
+					text-shadow:
+						0 0 8px rgba(95, 237, 131, 1),
+						0 0 20px rgba(95, 237, 131, 0.8),
+						0 0 32px rgba(138, 43, 226, 0.68);
+				}
+			}
+
+			@keyframes vs-gradient {
+				0% {
+					background-position: 0% 50%;
+				}
+				100% {
+					background-position: 100% 50%;
+				}
+			}
+
+			@keyframes card-shimmer {
+				0% {
+					transform: translateX(-170%) rotate(18deg);
+				}
+				100% {
+					transform: translateX(430%) rotate(18deg);
+				}
+			}
+
+			@keyframes float-in {
+				from {
+					opacity: 0;
+					transform: translateY(12px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			@keyframes loading-shift {
+				0% {
+					color: var(--green);
+					text-shadow: 0 0 8px rgba(95, 237, 131, 0.6);
+				}
+				50% {
+					color: var(--purple);
+					text-shadow: 0 0 8px rgba(138, 43, 226, 0.6);
+				}
+				100% {
+					color: var(--green);
+					text-shadow: 0 0 8px rgba(95, 237, 131, 0.6);
+				}
+			}
+
+			@keyframes confetti-fall {
+				0% {
+					transform: translate3d(0, -12%, 0) rotate(var(--start-rotate, 0deg));
+					opacity: 0;
+				}
+				10% {
+					opacity: 1;
+				}
+				100% {
+					transform: translate3d(var(--drift, 0px), 122vh, 0) rotate(var(--end-rotate, 720deg));
+					opacity: 0.95;
+				}
+			}
+
+			@media (max-width: 760px) {
+				.page {
+					padding: 1.1rem;
+				}
+
+				.header h1 {
+					font-size: 1.05rem;
+				}
+
+				.vs {
+					font-size: 0.66rem;
+				}
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				*,
+				*::before,
+				*::after {
+					animation: none !important;
+					transition: none !important;
+				}
+
+				body::before {
+					opacity: 0.08;
+				}
+			}
+
+			@media (min-width: 760px) {
+				.player-inputs {
+					grid-template-columns: 1fr 1fr auto;
+					align-items: end;
+				}
+
+				.results-grid {
+					grid-template-columns: 1fr auto 1fr;
+					align-items: start;
+				}
+			}
+		</style>
 	</head>
 	<body>
-		<h1>Mona Mayhem</h1>
-		<p>Welcome to Mona Mayhem! Time to build a GitHub Contribution Battle Arena.</p>
+		<main class="page">
+			<header class="header">
+				<h1>Mona Mayhem</h1>
+				<p>GitHub Contribution Battle Arena</p>
+			</header>
+
+			<section class="controls" aria-label="Battle setup">
+				<div class="player-inputs">
+					<div class="field">
+						<label for="player1">Player 1</label>
+						<input id="player1" name="player1" type="text" placeholder="e.g. octocat" autocomplete="off" />
+					</div>
+					<div class="field">
+						<label for="player2">Player 2</label>
+						<input id="player2" name="player2" type="text" placeholder="e.g. torvalds" autocomplete="off" />
+					</div>
+					<button id="battleButton" type="button" aria-busy="false">
+						<span id="battleButtonText">Battle</span>
+					</button>
+				</div>
+				<p id="status" class="status" role="status" aria-live="polite" aria-atomic="true" tabindex="-1"></p>
+			</section>
+
+			<section id="results" class="results hidden" aria-label="Battle results">
+				<p id="winnerIndicator" class="winner-indicator" role="status" aria-live="polite" aria-atomic="true">Winner: Pending battle</p>
+				<p id="graphLegend" class="sr-only">Contribution graph legend: empty day, low activity, medium activity, high activity, and highest activity.</p>
+				<div class="results-grid">
+					<article class="player-card" aria-label="Player 1 results">
+						<h2 id="name1">Player 1</h2>
+						<p id="summary1" class="summary">No data yet.</p>
+						<div id="graph1" class="graph" role="img" aria-describedby="graphLegend" aria-label="Player 1 contribution graph"></div>
+					</article>
+					<p class="vs">VS</p>
+					<article class="player-card" aria-label="Player 2 results">
+						<h2 id="name2">Player 2</h2>
+						<p id="summary2" class="summary">No data yet.</p>
+						<div id="graph2" class="graph" role="img" aria-describedby="graphLegend" aria-label="Player 2 contribution graph"></div>
+					</article>
+				</div>
+			</section>
+		</main>
+
+		<div
+			id="winnerPopupBackdrop"
+			class="winner-popup-backdrop"
+			aria-hidden="true"
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="winnerPopupTitle"
+			aria-describedby="winnerPopupSubtitle"
+		>
+			<section class="winner-popup">
+				<div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
+				<div class="winner-popup-content">
+					<p class="winner-popup-eyebrow">Arcade Victory</p>
+					<h2 id="winnerPopupTitle" class="winner-popup-title">Winner!</h2>
+					<p id="winnerPopupSubtitle" class="winner-popup-subtitle">Legendary contribution streak unlocked.</p>
+					<button id="winnerPopupClose" class="winner-popup-close" type="button">Continue</button>
+				</div>
+			</section>
+		</div>
+
+		<script>
+			import '../scripts/battle.ts';
+		</script>
 	</body>
 </html>

@@ -45,6 +45,17 @@ export const GET: APIRoute = async ({ params }) => {
 		});
 	}
 
+	if (normalizedUsername.length > 39) {
+		return jsonResponse(400, {
+			error: 'Username too long',
+			code: 'USERNAME_TOO_LONG',
+			message: 'GitHub usernames cannot exceed 39 characters.',
+		}, {
+			'Cache-Control': 'no-store',
+		});
+	}
+
+
 	const upstreamUrl = `https://github.com/${encodeURIComponent(normalizedUsername)}.contribs`;
 
 	try {
