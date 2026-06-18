@@ -14,6 +14,8 @@ function toggleTheme() {
     updateToggleIcon();
 }
 
+window.toggleTheme = toggleTheme;
+
 function updateToggleIcon() {
     const btn = document.querySelector('.theme-toggle');
     if (!btn) return;
