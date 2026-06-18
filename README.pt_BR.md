@@ -1,13 +1,48 @@
 <!-- l10n-sync: source-file="README.md" -->
+<div align="center">
+
 # 🎮 Mona Mayhem
 
-**Workshop VS Code GitHub Copilot** — Construa uma Arena de Batalha de Contribuições GitHub
+### *Batalha dos Commits* — Um Workshop de GitHub Copilot
 
-Um site com tema de arcade retrô construído com Astro que permite comparar os gráficos de contribuição GitHub de dois usuários. Este workshop ensina recursos do VS Code Copilot através da construção deste app.
+[![Licença: MIT](https://img.shields.io/badge/Licença-MIT-yellow.svg)](LICENSE)
+[![Astro](https://img.shields.io/badge/Astro-v5-BC52EE?logo=astro&logoColor=white)](https://astro.build/)
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![GitHub Copilot](https://img.shields.io/badge/GitHub%20Copilot-obrigatório-000000?logo=githubcopilot&logoColor=white)](https://github.com/features/copilot)
+
+**Coloque dois usuários do GitHub frente a frente em um épico duelo de gráficos de contribuição — e aprenda GitHub Copilot no processo.**
 
 ![Mona Mayhem Screenshot](https://github.com/user-attachments/assets/5eca79e2-cb9f-4e93-aa0d-23666ebde3b7)
 
+[**🚀 Iniciar o Workshop →**](workshop/pt_BR/00-overview.md) &nbsp;|&nbsp; [**📖 Ler a Documentação →**](workshop/pt_BR/)
+
+</div>
+
+---
+
+## ✨ O Que Você Vai Construir
+
+Uma **arena de batalha estilo arcade retrô** onde dois usuários do GitHub se enfrentam, com seus gráficos de contribuição como armas. Você parte de um template vazio e chega a um app polido e pronto para deploy — totalmente impulsionado pelo GitHub Copilot.
+
+> **Este repositório é seu ponto de partida.** Você constrói o app passo a passo com o Copilot; o resultado final é seu.
+
+## 🧠 O Que Você Vai Aprender
+
+| Habilidade | Onde Vai Usar |
+|------------|---------------|
+| Engenharia de contexto | Criar instruções e prompts de workspace eficazes |
+| Plan Mode | Decompor funcionalidades antes de escrever código |
+| Agent Mode | Deixar o Copilot escrever, iterar e se autocorrigir |
+| Design com IA | De vibes → design → implementação em um único ciclo |
+| Trabalho paralelo | Rodar múltiplos background agents simultaneamente |
+| Revisão de código | Usar o Copilot para encontrar problemas e melhorar qualidade |
+
 ## 📚 Workshop
+
+Escolha o track que melhor se adapta ao seu fluxo de trabalho — ambos cobrem as mesmas habilidades fundamentais:
+
+- 🖥️ **Track VS Code** — Chat, Plan Mode, Agent Mode, background agents e ciclos de revisão nativos do editor
+- 💻 **Track CLI** — `copilot`, contexto `@file`, `/plan`, edições autônomas, `/fleet`, `/delegate` e `/review`
 
 | Parte | Título | Recurso do Copilot |
 |-------|--------|-------------------|
@@ -21,24 +56,52 @@ Um site com tema de arcade retrô construído com Astro que permite comparar os 
 
 ## 🚀 Início Rápido
 
-1. **Use este template** → Crie um novo repositório
-2. Clone e abra no VS Code
-3. Abra o painel do Chat e digite `/setup`
-4. Siga o [guia do workshop](workshop/pt_BR/00-overview.md)
+1. **Crie seu próprio repositório** — clique em **[Usar este template](../../generate)** ou faça um fork deste repositório.
+2. **Escolha seu track:**
+   - **VS Code** — clone seu repositório e abra no VS Code.
+   - **Copilot CLI** — clone seu repositório, instale o `copilot` e trabalhe pelo terminal.
+3. **Comece agora!** → [workshop/pt_BR/00-overview.md](workshop/pt_BR/00-overview.md)
 
-## Pré-requisitos
+## 🛠️ Pré-requisitos
+
+<table>
+<tr>
+<th>Todos os tracks</th>
+<th>Track VS Code</th>
+<th>Track CLI</th>
+</tr>
+<tr>
+<td>
+
+- GitHub Copilot (Pro, Business ou Enterprise)
+- Git
+- Node.js 18+
+
+</td>
+<td>
 
 - VS Code v1.107+
-- GitHub Copilot (Pro, Business ou Enterprise)
-- Node.js 18+
-- Git
+- Extensão do GitHub Copilot conectada
 
-## Stack Tecnológica
+</td>
+<td>
 
-- **Framework**: [Astro](https://astro.build/) v5
-- **Runtime**: Node.js com adaptador [@astrojs/node](https://docs.astro.build/en/guides/integrations-guide/node/)
-- **Fonte**: Press Start 2P (fonte de jogos retrô)
-- **API**: API de gráfico de contribuições do GitHub
+- GitHub Copilot CLI (`copilot`)
+- Node.js 22+ para instalar via npm
+- Ou Homebrew / WinGet
+
+</td>
+</tr>
+</table>
+
+## ⚙️ Stack Tecnológica
+
+| Camada | Tecnologia |
+|--------|------------|
+| Framework | [Astro](https://astro.build/) v5 |
+| Runtime | Node.js + adaptador [@astrojs/node](https://docs.astro.build/en/guides/integrations-guide/node/) |
+| Fonte | Press Start 2P (estilo jogos retrô) |
+| Dados | API de gráfico de contribuições do GitHub |
 
 ## Licença
 
